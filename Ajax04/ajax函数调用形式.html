@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ajax函数调用形式</title>
+	<script type="text/javascript"> 
+
+		function ajax(p){
+			var data = {name:123};
+			p.success(data);
+		}
+		
+		ajax({
+			url:"http://www.baidu.com",
+			type:"get",
+			dataType:"jsonp",
+			success:function(data){
+				console.log(data.name);	
+			}		
+		});
+
+		// 也可以把参数提取到外面来写，如下：
+		/*var param = {
+			url:"http://www.baidu.com",
+			type:"get",
+			dataType:"jsonp",
+			success:function(data){
+				console.log(data.name);
+			}
+		};
+
+		ajax(param);*/
+
+	</script>
+
+</head>
+<body>
+
+</body>
+</html>

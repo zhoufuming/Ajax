@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jsonp格式</title>
+	<script type="text/javascript" src="jquery-1.11.2.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$("#btn").on("click",function(){
+				$.ajax({
+					type:"get",
+					async:false,
+					url:"jsonp.php",
+					dataType:"jsonp",
+					jsonp:"qwe", // 传递给请求处理程序或页面的，用于获得函数名的参数名（默认为：callback）
+					jsonpCallback:"callback", // 自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名（类似：jQuery11011313655641321654312(["zhangsan","lisi","wangwu"]);）
+					success:function(json){
+						console.log(json);
+					},error:function(){
+						console.log('fail');
+					}
+				});
+			});
+		});
+	</script>
+</head>
+<body>
+	<input type="button" name="" value="点击" id="btn">
+</body>
+</html>

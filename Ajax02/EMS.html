@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>EMS</title>
+	<style type="text/css">
+		#ems{
+			position: absolute;
+			left: 50%;
+			width: 400px;
+			height: auto;
+			margin-left: -200px;
+			background: lightGreen;
+			text-align: center;
+			min-height: 50px;
+			height: 500px;
+			overflow-y: scroll;
+			overflow-x: hidden;
+		}
+		#ems input{
+			height: 25px;
+			margin-top: 10px;
+		}
+		#list{
+			background: lightBlue;
+		}
+		#list li{
+			text-align: left;
+		}
+	</style>
+	<script type="text/javascript">
+		window.addEventListener("load",function(){
+			var btn = document.getElementById("btn");
+			btn.addEventListener("click",function(){
+				var code = document.getElementById("code").value;
+				var xhr = null;
+
+				try{ // try catch 是用来处理异常的函数，如果try中的语句出错，就会执行catch，如果catch中的语句也出错了就会跳出函数外
+					xhr = new XMLHttpRequest();
+				}catch(e){
+					xhr = new ActiveXObject("Microsoft XMLHTTP");
+				}
+				// 别忘了加上时间戳喔~
+				xhr.open("get","ems.php?code="+code+"&_t="+new Date().getTime());
+				xhr.send(null);
+
+				// 指定回调函数
+				xhr.onreadystatechange = function(){
+					// 判断服务器返回状态
+					if (this.readyState == 4 && this.status == 200) {
+						// 解析服务器返回数据
+						var data = JSON.parse(this.responseText);
+						// 查看数据库返回数据是否正确
+						if (data.status == 0) {
+							// 获取列表数据信息
+							var list = data.data.info.context;
+							var tag = "";
+							// 遍历数据列表信息
+							for (var i = 0; i < list.length; i++) {
+								var item = list[i];
+								var t = new Date();
+								t.setTime(item.time+"000");
+								var str = t.getFullYear()+'年'+(t.getMonth()+1)+'月'+t.getDay()+'日'+(t.getHours()>12?' 下午':' 上午')+t.getHours()%12+':'+t.getMinutes()+':'+t.getSeconds();
+
+				    			tag += '<li><div>'+str+'</div><div>'+item.desc+'</div></li>';
+							}
+
+			    			var ul = document.createElement("ul");
+			    			ul.innerHTML = tag;
+			    			document.getElementById("list").appendChild(ul);
+						}
+						else {
+							var info = data.msg;
+							document.getElementById("list").innerHTML = info;
+						}
+					}
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+<div id="ems">
+	<div>
+		<input type="text" id="code">
+		<input type="button" value="查询" id="btn">
+	</div>
+	<div id="list">
+	</div>
+</div>
+</body>
+</html>
